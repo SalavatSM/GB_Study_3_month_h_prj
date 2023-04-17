@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from config import bot, dp
+# from config import bot, dp
 import random
 
 
@@ -21,7 +21,7 @@ async def filter_bad_words(message: types.Message):
     #     await message.answer(text=int(message.text)**2)
     # else:
     #     await message.answer(f'Bot does not know command like "{message.text}"!\n'
-    #                          f'Pleace check your typing!')
+    #                          f'Please check your typing!')
 
 
 # @dp.message_handler()

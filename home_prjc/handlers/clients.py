@@ -1,8 +1,9 @@
 from aiogram import Dispatcher, types
 from config import bot, dp
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.dispatcher.filters import Text
 from time import sleep
-import random
+# import random
 import requests
 from bs4 import BeautifulSoup
 from config import BASE_URL
@@ -75,7 +76,7 @@ async def start_command(message: types.Message):
 
 
 def register_handlers_clients(dp: Dispatcher):
-    dp.register_message_handler(start_command, commands=['mem'])
-    dp.register_message_handler(quiz_1, commands=['quiz'])
+    dp.register_message_handler(start_command, Text(equals='mem', ignore_case=True))
+    dp.register_message_handler(quiz_1, Text(equals='quiz', ignore_case=True))
     dp.register_message_handler(pin_message, commands=['pin'], commands_prefix='!')
-    dp.register_message_handler(dice_message, commands=['dice'])
+    dp.register_message_handler(dice_message, Text(equals='dice', ignore_case=True))
