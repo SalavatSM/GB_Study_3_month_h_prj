@@ -5,6 +5,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from .client_kb import submit_markup, cancel_markup
 from config import bot
 
+from database.bot_db import sql_command_insert
+
 
 class FSMAdmin(StatesGroup):
     mentor_id = State()
@@ -83,9 +85,9 @@ async def submit_state(message: types.Message, state: FSMContext):
     if message.text.lower() not in ['yes', 'no']:
         await message.answer("Use buttons!")
     elif message.text.lower() == "yes":
-        await message.answer("The data about mentor collected. Thank you!")
-        #  here we must write data to DB.
+        await sql_command_insert(state)  # calling sql commands
         await state.finish()  # here cash is cleaned (that's why we have to write data to DB before call this func)
+        await message.answer("The data about mentor collected. Thank you!")
     elif message.text.lower() == "no":
         await FSMAdmin.mentor_id.set()
         await message.answer("Give me the mentor ID.", reply_markup=cancel_markup)
