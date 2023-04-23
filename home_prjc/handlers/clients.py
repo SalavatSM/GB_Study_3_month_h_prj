@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, types
-from config import bot, dp
+from config import bot, dp, ADMINS
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters import Text
 from time import sleep
@@ -7,6 +7,7 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 from config import BASE_URL
+from database.bot_db import sql_command_random, sql_command_all
 
 
 # shows random meme
@@ -70,6 +71,35 @@ async def quiz_1(message: types.Message):
     )
 
 
+async def get_random_mentor(message: types.Message):
+    random_user = await sql_command_random()
+    await message.answer(
+        f"{random_user[2]} was chosen to be on duty.\n\n{random_user[2]} is {random_user[4]} years old, "
+        f"study direction is {random_user[3]} and study group is {random_user[-1]}"
+    )
+
+
+# async def delete_data(message: types.Message):
+#     if message.from_user.id not in ADMINS:
+#         await message.answer("You are not BOSS her!")
+#     else:
+#         users = await sql_command_all()
+#         for user in users:
+#             await message.answer(
+#                 f"{user[2]} was chosen to be deleted",
+#                 reply_markup=InlineKeyboardMarkup().add(
+#                     InlineKeyboardMarkup(
+#                         f"DELETE {user[2]}",
+#                         callback_data=f"delete {user[0]}"
+#                     )
+#                 )
+#             )
+
+
+# def register_handlers_admin(dp: Dispatcher):
+#     dp.register_message_handler(delete_data, commands=['delete'])
+
+
 # @dp.message_handler(commands=['mem'])
 async def start_command(message: types.Message):
     await message.reply(get_random_meme())
@@ -80,3 +110,5 @@ def register_handlers_clients(dp: Dispatcher):
     dp.register_message_handler(quiz_1, Text(equals='quiz', ignore_case=True))
     dp.register_message_handler(pin_message, commands=['pin'], commands_prefix='!')
     dp.register_message_handler(dice_message, Text(equals='dice', ignore_case=True))
+    dp.register_message_handler(get_random_mentor, Text(equals='get', ignore_case=True))
+    # dp.register_message_handler(delete_data, Text(equals='delete'))

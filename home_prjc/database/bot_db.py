@@ -1,3 +1,4 @@
+import random
 import sqlite3
 
 db = sqlite3.connect("bot.sqlite3")
@@ -33,3 +34,18 @@ async def sql_command_insert(state):
                        "(null, ?, ?, ?, ?, ?)", tuple(data.values())
                        )
         db.commit()
+
+
+async def sql_command_random():
+    users = cursor.execute("SELECT * FROM mentors").fetchall()
+    random_users = random.choice(users)
+    return random_users
+
+
+async def sql_command_all():
+    return cursor.execute("SELECT * FROM mentors").fetchall()
+
+
+async def sql_command_delete(mentor_id):
+    cursor.execute("DELETE FROM mentors WHERE id == ?", (id,))
+    db.commit()
