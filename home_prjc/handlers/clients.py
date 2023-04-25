@@ -34,7 +34,7 @@ async def dice_message(message: types.Message):
     await message.answer(f'This is my dice number.')
     b = await message.answer_dice(emoji='🎲')
     sleep(4)
-    await message.answer((f'This is your dice number.'))
+    await message.answer(f'This is your dice number.')
     sleep(1)
     if a.dice.value > b.dice.value:
         await message.answer(f'My number: {a.dice.value} and it is bigger then yours!\n So, I win the game!')
@@ -79,28 +79,6 @@ async def get_random_mentor(message: types.Message):
     )
 
 
-# async def delete_data(message: types.Message):
-#     if message.from_user.id not in ADMINS:
-#         await message.answer("You are not BOSS her!")
-#     else:
-#         users = await sql_command_all()
-#         for user in users:
-#             await message.answer(
-#                 f"{user[2]} was chosen to be deleted",
-#                 reply_markup=InlineKeyboardMarkup().add(
-#                     InlineKeyboardMarkup(
-#                         f"DELETE {user[2]}",
-#                         callback_data=f"delete {user[0]}"
-#                     )
-#                 )
-#             )
-
-
-# def register_handlers_admin(dp: Dispatcher):
-#     dp.register_message_handler(delete_data, commands=['delete'])
-
-
-# @dp.message_handler(commands=['mem'])
 async def start_command(message: types.Message):
     await message.reply(get_random_meme())
 
@@ -111,4 +89,4 @@ def register_handlers_clients(dp: Dispatcher):
     dp.register_message_handler(pin_message, commands=['pin'], commands_prefix='!')
     dp.register_message_handler(dice_message, Text(equals='dice', ignore_case=True))
     dp.register_message_handler(get_random_mentor, Text(equals='get', ignore_case=True))
-    # dp.register_message_handler(delete_data, Text(equals='delete'))
+    # dp.register_message_handler(delete_data, Text(equals='delete', ignore_case=True))
