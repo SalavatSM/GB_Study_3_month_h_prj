@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, types
 from config import bot, dp, ADMINS
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from aiogram.dispatcher.filters import Text
 from time import sleep
 # import random
@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 from config import BASE_URL
 from database.bot_db import sql_command_random, sql_command_all
+from parser.movies import parser
 
 
 # shows random meme
@@ -79,6 +80,16 @@ async def get_random_mentor(message: types.Message):
     )
 
 
+async def get_movie(message: types.Message):
+    size = message.text.split()[-1] if len(message.text.split()) == 2 else None
+    movies: list[dict] = parser(size)
+    for movie in movies:
+        await message.answer(
+            f"<a href='{movie['url']}'><b>{movie['title']}</b></a>",
+            parse_mode=ParseMode.HTML
+        )
+
+
 async def start_command(message: types.Message):
     await message.reply(get_random_meme())
 
@@ -89,4 +100,5 @@ def register_handlers_clients(dp: Dispatcher):
     dp.register_message_handler(pin_message, commands=['pin'], commands_prefix='!')
     dp.register_message_handler(dice_message, Text(equals='dice', ignore_case=True))
     dp.register_message_handler(get_random_mentor, Text(equals='get', ignore_case=True))
+    dp.register_message_handler(get_movie, commands=['movie'])
     # dp.register_message_handler(delete_data, Text(equals='delete', ignore_case=True))
