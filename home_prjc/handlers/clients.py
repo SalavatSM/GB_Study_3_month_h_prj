@@ -90,6 +90,18 @@ async def get_movie(message: types.Message):
         )
 
 
+async def get_quote(message: types.Message):
+    response = requests.get('https://api.quotable.io/random')
+    if response.status_code == 200:
+        quote_data = response.json()
+        quote = quote_data['content']
+        author = quote_data['author']
+        text = f"{quote}\n- {author}"
+        await message.answer(text)
+    else:
+        await message.answer("Sorry, I couldn't retrieve a quote at this time.")
+
+
 async def start_command(message: types.Message):
     await message.reply(get_random_meme())
 
@@ -101,4 +113,5 @@ def register_handlers_clients(dp: Dispatcher):
     dp.register_message_handler(dice_message, Text(equals='dice', ignore_case=True))
     dp.register_message_handler(get_random_mentor, Text(equals='get', ignore_case=True))
     dp.register_message_handler(get_movie, commands=['movie'])
+    # dp.register_message_handler(get_quote, commands=['quote'])
     # dp.register_message_handler(delete_data, Text(equals='delete', ignore_case=True))
